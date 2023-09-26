@@ -7,6 +7,13 @@ static int main_ret = 0;
 static int test_count = 0;
 static int test_pass = 0;
 
+/*
+* 若一个 JSON 只含有空白，传回 `LEPT_PARSE_EXPECT_VALUE`。
+* 若一个值之后，在空白之后还有其他字符，传回 `LEPT_PARSE_ROOT_NOT_SINGULAR`。
+* 若值不是那三种字面值，传回 `LEPT_PARSE_INVALID_VALUE`。
+*/
+
+// 预期值不等于实际值，输出错误信息
 #define EXPECT_EQ_BASE(equality, expect, actual, format) \
     do {\
         test_count++;\
@@ -16,7 +23,8 @@ static int test_pass = 0;
             fprintf(stderr, "%s:%d: expect: " format " actual: " format "\n", __FILE__, __LINE__, expect, actual);\
             main_ret = 1;\
         }\
-    } while(0)
+    } while(0) 
+// do {} while(0) 将多个语句包裹成单个语句
 
 #define EXPECT_EQ_INT(expect, actual) EXPECT_EQ_BASE((expect) == (actual), expect, actual, "%d")
 
@@ -24,14 +32,14 @@ static void test_parse_null() {
     lept_value v;
     v.type = LEPT_FALSE;
     EXPECT_EQ_INT(LEPT_PARSE_OK, lept_parse(&v, "null"));
-    EXPECT_EQ_INT(LEPT_NULL, lept_get_type(&v));
+    EXPECT_EQ_INT(LEPT_NULL, lept_get_type(&v)); 
 }
 
 static void test_parse_expect_value() {
     lept_value v;
 
     v.type = LEPT_FALSE;
-    EXPECT_EQ_INT(LEPT_PARSE_EXPECT_VALUE, lept_parse(&v, ""));
+    EXPECT_EQ_INT(LEPT_PARSE_EXPECT_VALUE, lept_parse(&v, ""));  
     EXPECT_EQ_INT(LEPT_NULL, lept_get_type(&v));
 
     v.type = LEPT_FALSE;
@@ -58,7 +66,8 @@ static void test_parse_root_not_singular() {
 }
 
 static void test_parse() {
-    test_parse_null();
+    test_parse_null(); 
+
     test_parse_expect_value();
     test_parse_invalid_value();
     test_parse_root_not_singular();
